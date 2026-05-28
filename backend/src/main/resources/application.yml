@@ -1,0 +1,9 @@
+spring:
+application:
+name: fatogeral
+
+profiles:
+active: local
+
+server:
+port: ${PORT:8080}
