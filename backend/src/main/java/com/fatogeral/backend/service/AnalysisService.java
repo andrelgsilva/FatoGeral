@@ -10,6 +10,7 @@ import com.fatogeral.backend.entity.User;
 import com.fatogeral.backend.integration.AiIntegrationService;
 import com.fatogeral.backend.repository.AnalysisRepository;
 import com.fatogeral.backend.repository.UserRepository;
+import com.fatogeral.backend.dto.TrendResponse;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
