@@ -7,7 +7,6 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,26 +25,26 @@ public class AnalysisController {
     @PostMapping
     public ResponseEntity<AnalysisResponse> createAnalysis(
             @Valid @RequestBody AnalysisRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String userEmail) {
 
-        AnalysisResponse response = analysisService.createAnalysis(request, userDetails.getUsername());
+        AnalysisResponse response = analysisService.createAnalysis(request, userEmail);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<AnalysisResponse> getById(
             @PathVariable UUID id,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String userEmail) {
 
-        AnalysisResponse response = analysisService.getById(id, userDetails.getUsername());
+        AnalysisResponse response = analysisService.getById(id, userEmail);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/history")
     public ResponseEntity<List<AnalysisResponse>> getHistory(
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String userEmail) {
 
-        List<AnalysisResponse> response = analysisService.getHistory(userDetails.getUsername());
+        List<AnalysisResponse> response = analysisService.getHistory(userEmail);
         return ResponseEntity.ok(response);
     }
 }

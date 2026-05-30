@@ -82,4 +82,13 @@ public class GlobalExceptionHandler {
                 .body(buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", 
                         "Ocorreu um erro interno. Tente novamente.", request.getRequestURI()));
     }
+
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<Map<String, Object>> handleIllegalState(
+        IllegalStateException ex, HttpServletRequest request) {
+
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+            .body(buildError(HttpStatus.UNPROCESSABLE_ENTITY, "Unprocessable Entity", ex.getMessage(), request.getRequestURI()));
+    }
+    
 }
