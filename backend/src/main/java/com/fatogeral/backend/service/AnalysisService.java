@@ -95,11 +95,7 @@ public class AnalysisService {
                 .toList();
     }
 
-    public List<AnalysisResponse> getTrends() {
-        return analysisRepository.findAllByOrderByCreatedAtDesc()
-                .stream()
-                .limit(20)
-                .map(a -> AnalysisResponse.from(a, List.of()))
-                .toList();
+    public List<TrendResponse> getTrends() {
+        return analysisRepository.findTopVerdicts();
     }
 }

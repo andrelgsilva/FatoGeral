@@ -29,5 +29,5 @@ cors:
     
 logging:
   level:
-    org.flywaydb: 
+    org.flywaydb: DEBUG
     
