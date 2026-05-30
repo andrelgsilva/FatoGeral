@@ -23,3 +23,7 @@ jwt:
 logging:
   level:
     org.flywaydb: DEBUG
+
+cors:
+  allowed-origins:
+    - http://localhost:5173
