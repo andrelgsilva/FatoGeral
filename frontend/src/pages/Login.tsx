@@ -61,7 +61,7 @@ export default function Login() {
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <Input
             label="E-mail"
-            type="email"
+            type="text"
             placeholder="seu@email.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
