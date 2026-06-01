@@ -1,9 +1,6 @@
 import { api } from './api';
 import type { Analysis } from './analysisService';
 
-// ===== TIPOS =====
-
-// Filtros para buscar análises no painel admin
 export interface AdminFilters {
   status?: 'PENDING' | 'COMPLETED' | 'ERROR';
   revisado?: boolean;
@@ -11,13 +8,11 @@ export interface AdminFilters {
   endDate?: string;
 }
 
-// O que enviamos ao revisar uma análise
 export interface ReviewPayload {
   veredito: string;
   justificativa: string;
 }
 
-// Resposta paginada do admin
 export interface AdminAnalysisResponse {
   content: Analysis[];
   totalPages: number;
@@ -25,9 +20,6 @@ export interface AdminAnalysisResponse {
   number: number;
 }
 
-// ===== FUNÇÕES =====
-
-// Busca todas as análises com filtros e paginação
 export async function getAllAnalyses(
   filters: AdminFilters = {},
   page: number = 0
@@ -38,7 +30,6 @@ export async function getAllAnalyses(
   return response.data;
 }
 
-// Revisa uma análise — altera veredicto e justificativa
 export async function reviewAnalysis(
   id: string,
   data: ReviewPayload
