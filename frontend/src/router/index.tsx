@@ -1,6 +1,7 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { AuthProvider } from '../contexts/AuthContext';
 import { ProtectedRoute, AdminRoute } from '../components/ProtectedRoute';
+import { AuthenticatedLayout } from '../components/AuthenticatedLayout';
 import Home from '../pages/Home';
 import Login from '../pages/Login';
 import Register from '../pages/Register';
@@ -10,6 +11,7 @@ import Admin from '../pages/Admin';
 import NotFound from '../pages/NotFound';
 import AcessoNegado from '../pages/AcessoNegado';
 import { useAuth } from '../contexts/AuthContext';
+import AnalysisDetail from '../pages/AnalysisDetail';
 
 function AuthLayout() {
   return (
@@ -36,17 +38,18 @@ export const router = createBrowserRouter([
       {
         element: <ProtectedRoute />,
         children: [
-          { path: '/', element: <Home /> },
-          { path: '/history', element: <History /> },
-        ],
-      },
-
-      {
-        element: <ProtectedRoute />,
-        children: [
           {
-            element: <AdminRoute />,
-            children: [{ path: '/admin', element: <Admin /> }],
+            // AuthenticatedLayout envolve todas as páginas protegidas
+            element: <AuthenticatedLayout />,
+            children: [
+              { path: '/', element: <Home /> },
+              { path: '/history', element: <History /> },
+              { path: '/analysis/:id', element: <AnalysisDetail /> },
+              {
+                element: <AdminRoute />,
+                children: [{ path: '/admin', element: <Admin /> }],
+              },
+            ],
           },
         ],
       },
