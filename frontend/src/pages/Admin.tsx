@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAllAnalyses } from '../services/adminService';
-import type { Analysis, AdminFilters } from '../services/adminService';
+import type { AdminFilters } from '../services/adminService';
+import type { Analysis } from '../services/analysisService';
 import { Spinner } from '../components/Spinner';
 
 // Importa o modal do FE-17 (vamos criar logo depois)

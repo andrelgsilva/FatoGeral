@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 import { createAnalysis } from '../services/analysisService';
 import type { Analysis } from '../services/analysisService';
 import { AnalysisResult } from '../components/AnalysisResult';
@@ -30,8 +31,9 @@ export default function Home() {
     try {
       const data = await createAnalysis({ content: url.trim() || content.trim() });
       setResult(data);
+      toast.success('Análise enviada com sucesso!');
     } catch {
-      setError('Erro ao enviar para análise. Tente novamente.');
+      toast.error('Erro ao enviar para análise. Tente novamente.');
     } finally {
       setLoading(false);
     }
@@ -77,7 +79,7 @@ export default function Home() {
         <button
           type="submit"
           disabled={loading}
-          className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:opacity-60 text-white font-medium py-2.5 rounded-lg transition"
+          className="w-full flex items-center justify-center gap-2 disabled:opacity-60 text-white font-medium py-2.5 rounded-lg transition"
           style={{ backgroundColor: '#2563eb', color: '#ffffff' }}
         >
           {loading ? <Spinner size="sm" /> : null}
