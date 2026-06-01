@@ -25,7 +25,6 @@ export function AnalysisResult({ analysis }: Props) {
       </div>
     );
   }
-
   if (analysis.status === 'ERROR') {
     return (
       <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600">
@@ -33,12 +32,9 @@ export function AnalysisResult({ analysis }: Props) {
       </div>
     );
   }
-
   if (!analysis.result) return null;
-
   const { veredito, confianca, justificativa, fontes } = analysis.result;
   const porcentagem = Math.round(confianca * 100);
-
   return (
     <div className="flex flex-col gap-5">
       <div>
@@ -47,7 +43,6 @@ export function AnalysisResult({ analysis }: Props) {
           {veredito}
         </span>
       </div>
-
       <div>
         <div className="flex justify-between text-xs text-gray-500 mb-1">
           <span>Nível de confiança</span>
@@ -63,12 +58,10 @@ export function AnalysisResult({ analysis }: Props) {
           />
         </div>
       </div>
-
       <div>
         <p className="text-xs text-gray-500 mb-1 uppercase tracking-wide">Justificativa</p>
         <p className="text-sm text-gray-700 leading-relaxed">{justificativa}</p>
       </div>
-
       {fontes && fontes.length > 0 && (
         <div>
           <p className="text-xs text-gray-500 mb-2 uppercase tracking-wide">Fontes</p>
