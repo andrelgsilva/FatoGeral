@@ -18,3 +18,9 @@ Ex: kv-fatogeral
 
 Outros recursos:
 <tipo>-<projeto>-<detalhe>
+
+1o rodar o banco 
+docker start fatogeral-db
+
+2o rodar o run
+./mvnw spring-boot:run -Dspring-boot.run.profiles=local

@@ -2,18 +2,15 @@ package com.fatogeral.backend.service;
 
 import com.fatogeral.backend.dto.AnalysisRequest;
 import com.fatogeral.backend.dto.AnalysisResponse;
-import com.fatogeral.backend.dto.SourceResponse;
+import com.fatogeral.backend.dto.TrendResponse;
 import com.fatogeral.backend.entity.Analysis;
 import com.fatogeral.backend.entity.AnalysisStatus;
 import com.fatogeral.backend.entity.Role;
 import com.fatogeral.backend.entity.User;
-import com.fatogeral.backend.integration.AiIntegrationService;
+import com.fatogeral.backend.integration.AiIntegrationPort;
 import com.fatogeral.backend.repository.AnalysisRepository;
 import com.fatogeral.backend.repository.UserRepository;
-import com.fatogeral.backend.dto.TrendResponse;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -25,11 +22,11 @@ public class AnalysisService {
 
     private final AnalysisRepository analysisRepository;
     private final UserRepository userRepository;
-    private final AiIntegrationService aiIntegrationService;
+    private final AiIntegrationPort aiIntegrationService;
 
     public AnalysisService(AnalysisRepository analysisRepository,
                            UserRepository userRepository,
-                           AiIntegrationService aiIntegrationService) {
+                           AiIntegrationPort aiIntegrationService) {
         this.analysisRepository = analysisRepository;
         this.userRepository = userRepository;
         this.aiIntegrationService = aiIntegrationService;
