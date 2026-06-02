@@ -76,9 +76,9 @@ export default function Admin() {
           >
             <option value="">Todos</option>
             <option value="PENDING">Pendente</option>
-            <option value="COMPLETED">Concluído</option>
+            <option value="DONE">Concluído</option>
             <option value="ERROR">Erro</option>
-          </select>
+          </select> 
         </div>
 
         <div className="flex flex-col gap-1">
@@ -151,16 +151,32 @@ export default function Admin() {
             </thead>
             <tbody>
               {analyses.map((analysis) => (
-                <tr key={analysis.id} className="border-b border-gray-50 hover:bg-gray-50 transition">
-                  <td className="px-4 py-3 text-gray-600">{(analysis as any).userEmail ?? '—'}</td>
-                  <td className="px-4 py-3 text-gray-700 max-w-[200px] truncate">{analysis.inputText || analysis.inputUrl || ''}</td>
-                  <td className="px-4 py-3 text-gray-600">{analysis.result?.veredito ?? '—'}</td>
-                  <td className="px-4 py-3">
-                    <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${
-                      analysis.status === 'COMPLETED' ? 'bg-green-100 text-green-700' :
-                      analysis.status === 'PENDING' ? 'bg-yellow-100 text-yellow-700' :
-                      'bg-red-100 text-red-700'
-                    }`}>
+                <tr
+                    key={analysis.id}
+                    className="border-b border-gray-50 hover:bg-gray-50 transition"
+                  >
+                    <td className="px-4 py-3 text-gray-600">
+                      {(analysis as any).userEmail ?? '—'}
+                    </td>
+
+                    <td className="px-4 py-3 text-gray-700 max-w-[200px] truncate">
+                      {analysis.inputText || analysis.inputUrl || ''}
+                    </td>
+
+                    <td className="px-4 py-3 text-gray-600">
+                      {analysis.verdict ?? '—'}
+                    </td>
+
+                    <td className="px-4 py-3">
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-xs font-medium ${
+                          analysis.status === 'DONE'
+                            ? 'bg-green-100 text-green-700'
+                            : analysis.status === 'PENDING'
+                            ? 'bg-yellow-100 text-yellow-700'
+                            : 'bg-red-100 text-red-700'
+                        }`}
+                      >
                       {analysis.status}
                     </span>
                   </td>

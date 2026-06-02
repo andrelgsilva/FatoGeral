@@ -2,15 +2,15 @@ import { api } from './api';
 import type { Analysis } from './analysisService';
 
 export interface AdminFilters {
-  status?: 'PENDING' | 'COMPLETED' | 'ERROR';
+  status?: 'PENDING' | 'DONE' | 'ERROR';
   revisado?: boolean;
   startDate?: string;
   endDate?: string;
 }
 
 export interface ReviewPayload {
-  veredito: string;
-  justificativa: string;
+  verdict: string;
+  justification: string;
 }
 
 export interface AdminAnalysisResponse {
@@ -27,6 +27,7 @@ export async function getAllAnalyses(
   const response = await api.get<AdminAnalysisResponse>('/admin/analyses', {
     params: { ...filters, page, size: 10 },
   });
+
   return response.data;
 }
 
@@ -35,5 +36,6 @@ export async function reviewAnalysis(
   data: ReviewPayload
 ): Promise<Analysis> {
   const response = await api.put<Analysis>(`/analysis/${id}/review`, data);
+
   return response.data;
 }

@@ -19,25 +19,32 @@ const VEREDICTOS = [
 ];
 
 export function ReviewModal({ analysis, onClose, onSaved }: Props) {
-  const [veredito, setVeredito] = useState(
-    analysis.result?.veredito ?? VEREDICTOS[0]
+  const [verdict, setVerdict] = useState(
+    analysis.verdict ?? VEREDICTOS[0]
   );
-  const [justificativa, setJustificativa] = useState(
-    analysis.result?.justificativa ?? ''
+
+  const [justification, setJustification] = useState(
+    analysis.justification ?? ''
   );
+
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
   async function handleSave() {
-    if (!justificativa.trim()) {
+    if (!justification.trim()) {
       setError('A justificativa é obrigatória.');
       return;
     }
 
     setLoading(true);
     setError('');
+
     try {
-      await reviewAnalysis(analysis.id, { veredito, justificativa });
+      await reviewAnalysis(analysis.id, {
+        verdict,
+        justification,
+      });
+
       onSaved(); // fecha o modal e recarrega a tabela
     } catch {
       setError('Erro ao salvar revisão. Tente novamente.');
@@ -75,8 +82,8 @@ export function ReviewModal({ analysis, onClose, onSaved }: Props) {
           <div className="flex flex-col gap-1">
             <label className="text-sm font-medium text-gray-700">Veredicto</label>
             <select
-              value={veredito}
-              onChange={(e) => setVeredito(e.target.value)}
+              value={verdict}
+              onChange={(e) => setVerdict(e.target.value)}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
             >
               {VEREDICTOS.map((v) => (
@@ -90,8 +97,8 @@ export function ReviewModal({ analysis, onClose, onSaved }: Props) {
             as="textarea"
             label="Justificativa"
             placeholder="Explique o motivo da revisão..."
-            value={justificativa}
-            onChange={(e) => setJustificativa(e.target.value)}
+            value={justification}
+            onChange={(e) => setJustification(e.target.value)}
             className="min-h-[100px] resize-y"
           />
 
