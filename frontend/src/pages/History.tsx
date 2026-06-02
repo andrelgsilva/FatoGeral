@@ -92,13 +92,15 @@ export default function History() {
               className="w-full text-left bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:border-blue-200 hover:shadow-md transition"
             >
               {/* Trecho do conteúdo */}
-              <p className="text-sm text-gray-700 mb-2">{truncate(analysis.inputText || analysis.inputUrl || '')}</p>
+              <p className="text-sm text-gray-700 mb-2">
+                {truncate(analysis.inputText || analysis.inputUrl || '')}
+              </p>
 
               <div className="flex items-center justify-between gap-2 flex-wrap">
-                {/* Veredicto — só aparece se completado */}
-                {analysis.status === 'COMPLETED' && analysis.result ? (
-                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${getBadgeColor(analysis.result.veredito)}`}>
-                    {analysis.result.veredito}
+                {/* Veredicto — só aparece se concluído */}
+                {analysis.status === 'DONE' && analysis.verdict ? (
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${getBadgeColor(analysis.verdict)}`}>
+                    {analysis.verdict}
                   </span>
                 ) : (
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-gray-100 text-gray-500">
@@ -108,8 +110,8 @@ export default function History() {
 
                 <div className="flex items-center gap-3 text-xs text-gray-400">
                   {/* Confiança */}
-                  {analysis.status === 'COMPLETED' && analysis.result && (
-                    <span>{Math.round(analysis.result.confianca * 100)}% confiança</span>
+                  {analysis.status === 'DONE' && analysis.confidence !== null && (
+                    <span>{Math.round(analysis.confidence * 100)}% confiança</span>
                   )}
                   {/* Data */}
                   <span>{formatDate(analysis.createdAt)}</span>
