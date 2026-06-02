@@ -29,7 +29,11 @@ export default function Home() {
     setLoading(true);
     setResult(null);
     try {
-      const data = await createAnalysis({ content: url.trim() || content.trim() });
+      const payload = url.trim()
+        ? { inputUrl: url.trim() }
+        : { inputText: content.trim() };
+
+      const data = await createAnalysis(payload);
       setResult(data);
       toast.success('Análise enviada com sucesso!');
     } catch {

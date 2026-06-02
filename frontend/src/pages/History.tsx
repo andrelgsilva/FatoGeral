@@ -92,7 +92,7 @@ export default function History() {
               className="w-full text-left bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:border-blue-200 hover:shadow-md transition"
             >
               {/* Trecho do conteúdo */}
-              <p className="text-sm text-gray-700 mb-2">{truncate(analysis.content)}</p>
+              <p className="text-sm text-gray-700 mb-2">{truncate(analysis.inputText || analysis.inputUrl || '')}</p>
 
               <div className="flex items-center justify-between gap-2 flex-wrap">
                 {/* Veredicto — só aparece se completado */}

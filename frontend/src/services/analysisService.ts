@@ -4,13 +4,14 @@ import { api } from './api';
 
 // O que enviamos para criar uma análise
 export interface AnalysisRequest {
-  content: string;   // texto ou URL suspeita
+  inputText?: string;
+  inputUrl?: string;
 }
 
 // O resultado da análise retornado pela IA
 export interface AnalysisResult {
   veredito: string;
-  confianca: number;       // 0 a 1 (ex: 0.87 = 87%)
+  confianca: number;
   justificativa: string;
   fontes: string[];
 }
@@ -18,7 +19,8 @@ export interface AnalysisResult {
 // Uma análise completa retornada pela API
 export interface Analysis {
   id: string;
-  content: string;
+  inputText?: string;
+  inputUrl?: string;
   status: 'PENDING' | 'COMPLETED' | 'ERROR';
   result: AnalysisResult | null;
   createdAt: string;
@@ -29,7 +31,7 @@ export interface HistoryResponse {
   content: Analysis[];
   totalPages: number;
   totalElements: number;
-  number: number;          // página atual (começa em 0)
+  number: number;
 }
 
 // ===== FUNÇÕES =====
@@ -47,7 +49,6 @@ export async function getAnalysisById(id: string): Promise<Analysis> {
 }
 
 // Busca o histórico do usuário com paginação
-// page começa em 0
 export async function getHistory(page: number = 0): Promise<HistoryResponse> {
   const response = await api.get<HistoryResponse>('/analysis/history', {
     params: { page, size: 10 },
