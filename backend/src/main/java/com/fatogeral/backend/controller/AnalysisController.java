@@ -11,12 +11,15 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -43,9 +46,9 @@ public class AnalysisController {
     @PostMapping
     public ResponseEntity<AnalysisResponse> createAnalysis(
             @Valid @RequestBody AnalysisRequest request,
-            @AuthenticationPrincipal String userEmail) {
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-        AnalysisResponse response = analysisService.createAnalysis(request, userEmail);
+        AnalysisResponse response = analysisService.createAnalysis(request, userDetails.getUsername());
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -61,9 +64,9 @@ public class AnalysisController {
     @GetMapping("/{id}")
     public ResponseEntity<AnalysisResponse> getById(
             @Parameter(description = "ID da análise") @PathVariable UUID id,
-            @AuthenticationPrincipal String userEmail) {
+            @AuthenticationPrincipal UserDetails userDetails) {
 
-        AnalysisResponse response = analysisService.getById(id, userEmail);
+        AnalysisResponse response = analysisService.getById(id, userDetails.getUsername());
         return ResponseEntity.ok(response);
     }
 
@@ -75,10 +78,11 @@ public class AnalysisController {
         }
     )
     @GetMapping("/history")
-    public ResponseEntity<List<AnalysisResponse>> getHistory(
-            @AuthenticationPrincipal String userEmail) {
+    public ResponseEntity<Page<AnalysisResponse>> getHistory(
+            @AuthenticationPrincipal UserDetails userDetails,
+            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
 
-        List<AnalysisResponse> response = analysisService.getHistory(userEmail);
+        Page<AnalysisResponse> response = analysisService.getHistory(userDetails.getUsername(), pageable);
         return ResponseEntity.ok(response);
     }
 }

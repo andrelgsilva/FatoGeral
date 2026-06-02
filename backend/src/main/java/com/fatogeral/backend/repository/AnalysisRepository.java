@@ -3,6 +3,8 @@ package com.fatogeral.backend.repository;
 import com.fatogeral.backend.dto.TrendResponse;
 import com.fatogeral.backend.entity.Analysis;
 import com.fatogeral.backend.entity.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,6 +15,7 @@ import java.util.UUID;
 @Repository
 public interface AnalysisRepository extends JpaRepository<Analysis, UUID> {
     List<Analysis> findByUser(User user);
+    Page<Analysis> findByUser(User user, Pageable pageable);
     List<Analysis> findAllByOrderByCreatedAtDesc();
 
     @Query("SELECT new com.fatogeral.backend.dto.TrendResponse(a.verdict, COUNT(a)) " +

@@ -14,6 +14,8 @@ import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -129,16 +131,12 @@ public class AnalysisService {
         return AnalysisResponse.from(analysis, List.of());
     }
 
-    public List<AnalysisResponse> getHistory(String userEmail) {
-        log.info("Buscando histórico de análises para usuário: {}", userEmail);
-
+    public Page<AnalysisResponse> getHistory(String userEmail, Pageable pageable) {
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
-        return analysisRepository.findByUser(user)
-                .stream()
-                .map(a -> AnalysisResponse.from(a, List.of()))
-                .toList();
+        return analysisRepository.findByUser(user, pageable)
+                .map(a -> AnalysisResponse.from(a, List.of()));
     }
 
     public List<TrendResponse> getTrends() {
