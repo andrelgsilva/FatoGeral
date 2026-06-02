@@ -58,8 +58,8 @@ export default function History() {
 
   return (
     <div className="max-w-2xl mx-auto">
-      <h1 className="text-2xl font-bold text-gray-800 mb-1">Histórico</h1>
-      <p className="text-sm text-gray-500 mb-6">Suas análises anteriores.</p>
+      <h1 className="text-2xl font-bold text-gray-800 mb-1 cursor-default">Histórico</h1>
+      <p className="text-sm text-gray-500 mb-6 cursor-default">Suas análises anteriores.</p>
 
       {/* Loading */}
       {loading && (
@@ -90,7 +90,7 @@ export default function History() {
             <button
               key={analysis.id}
               onClick={() => navigate(`/analysis/${analysis.id}`)}
-              className="w-full text-left bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:border-blue-200 hover:shadow-md transition"
+              className="w-full text-left bg-white rounded-xl border border-gray-100 shadow-sm p-4 hover:border-blue-200 hover:shadow-md transition cursor-pointer"
             >
               {/* Trecho do conteúdo */}
               <p className="text-sm text-gray-700 mb-2">

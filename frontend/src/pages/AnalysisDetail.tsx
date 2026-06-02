@@ -60,7 +60,7 @@ export default function AnalysisDetail() {
         </p>
         <button
           onClick={() => navigate('/history')}
-          className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+          className="px-4 py-2 text-sm bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition cursor-pointer"
           style={{ backgroundColor: '#2563eb' }}
         >
           Voltar ao histórico
@@ -75,7 +75,7 @@ export default function AnalysisDetail() {
       {/* Botão voltar */}
       <button
         onClick={() => navigate('/history')}
-        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-6 transition"
+        className="flex items-center gap-1 text-sm text-gray-500 hover:text-gray-800 mb-6 transition cursor-pointer"
       >
         ← Voltar ao histórico
       </button>
