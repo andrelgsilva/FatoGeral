@@ -4,8 +4,8 @@ import { api } from '../services/api';
 import { Spinner } from '../components/Spinner';
 
 interface TrendItem {
-  tema: string;
-  quantidade: number;
+  verdict: string;
+  count: number;
 }
 
 export default function Trends() {
@@ -28,7 +28,7 @@ export default function Trends() {
   }, []);
 
   // Pega o maior valor para calcular a barra proporcional
-  const max = trends.length > 0 ? Math.max(...trends.map((t) => t.quantidade)) : 1;
+  const max = trends.length > 0 ? Math.max(...trends.map((t) => t.count)) : 1;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -38,7 +38,7 @@ export default function Trends() {
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
           <span className="text-lg font-bold text-blue-600">FatoGeral</span>
           <div className="flex gap-3">
-            <Link to="/login" className="text-sm text-gray-600 hover:text-blue-600 transition">
+            <Link to="/login" className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition">
               Entrar
             </Link>
             <Link
@@ -86,13 +86,13 @@ export default function Trends() {
             {trends.map((item, index) => (
               <div key={index} className="bg-white rounded-xl border border-gray-100 shadow-sm p-4">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium text-gray-700">{item.tema}</span>
-                  <span className="text-xs text-gray-400">{item.quantidade} análises</span>
+                  <span className="text-sm font-medium text-gray-700">{item.verdict}</span>
+                  <span className="text-xs text-gray-400">{item.count} análises</span>
                 </div>
                 <div className="w-full bg-gray-100 rounded-full h-2">
                   <div
                     className="h-2 rounded-full bg-blue-500 transition-all duration-500"
-                    style={{ width: `${(item.quantidade / max) * 100}%` }}
+                    style={{ width: `${(item.count / max) * 100}%` }}
                   />
                 </div>
               </div>

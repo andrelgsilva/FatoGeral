@@ -2,6 +2,7 @@ package com.fatogeral.backend.integration;
 
 import com.fatogeral.backend.dto.AiAnalysisResult;
 import com.fatogeral.backend.dto.SourceResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
@@ -27,9 +28,7 @@ public class GeminiAiIntegrationService implements AiIntegrationPort {
         this.apiKey = apiKey;
         this.apiUrl = apiUrl;
 
-        SimpleClientHttpRequestFactory factory =
-                new SimpleClientHttpRequestFactory();
-
+        SimpleClientHttpRequestFactory factory = new SimpleClientHttpRequestFactory();
         factory.setConnectTimeout(timeout);
         factory.setReadTimeout(timeout);
 
@@ -42,14 +41,18 @@ public class GeminiAiIntegrationService implements AiIntegrationPort {
     public AiAnalysisResult analyze(String content) {
 
         String prompt = """
-                Você é um verificador de fake news.
+                Você é um verificador de fake news profissional.
 
-                Analise o conteúdo abaixo e responda:
-                1. Veredito
-                2. Confiança de 0 a 1
-                3. Justificativa curta
+                Analise o conteúdo abaixo e responda APENAS com um JSON válido, sem texto adicional, sem markdown, sem explicações fora do JSON.
 
-                Conteúdo:
+                Formato obrigatório:
+                {
+                  "verdict": "string curta com o veredicto (ex: Fake News, Verdadeiro, Inconclusivo)",
+                  "confidence": número entre 0.0 e 1.0,
+                  "justification": "explicação objetiva em até 3 frases"
+                }
+
+                Conteúdo a analisar:
                 %s
                 """.formatted(content);
 
@@ -70,27 +73,33 @@ public class GeminiAiIntegrationService implements AiIntegrationPort {
                 .body(Map.class);
 
         String text = extractText(response);
-
-        return new AiAnalysisResult(
-                "Análise gerada pela IA",
-                0.80,
-                text,
-                List.<SourceResponse>of()
-        );
+        return parseResult(text);
     }
 
     private String extractText(Map response) {
-
         List candidates = (List) response.get("candidates");
-
         Map candidate = (Map) candidates.get(0);
-
         Map content = (Map) candidate.get("content");
-
         List parts = (List) content.get("parts");
-
         Map part = (Map) parts.get(0);
-
         return String.valueOf(part.get("text"));
+    }
+
+    private AiAnalysisResult parseResult(String text) {
+        try {
+            String clean = text.replaceAll("```json", "").replaceAll("```", "").trim();
+
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> json = mapper.readValue(clean, Map.class);
+
+            String verdict = String.valueOf(json.get("verdict"));
+            double confidence = Double.parseDouble(String.valueOf(json.get("confidence")));
+            String justification = String.valueOf(json.get("justification"));
+
+            return new AiAnalysisResult(verdict, confidence, justification, List.of());
+
+        } catch (Exception e) {
+            return new AiAnalysisResult("Inconclusivo", 0.0, text, List.of());
+        }
     }
 }
