@@ -17,7 +17,6 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -46,9 +45,9 @@ public class AnalysisController {
     @PostMapping
     public ResponseEntity<AnalysisResponse> createAnalysis(
             @Valid @RequestBody AnalysisRequest request,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String userEmail) {
 
-        AnalysisResponse response = analysisService.createAnalysis(request, userDetails.getUsername());
+        AnalysisResponse response = analysisService.createAnalysis(request, userEmail);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
@@ -64,9 +63,9 @@ public class AnalysisController {
     @GetMapping("/{id}")
     public ResponseEntity<AnalysisResponse> getById(
             @Parameter(description = "ID da análise") @PathVariable UUID id,
-            @AuthenticationPrincipal UserDetails userDetails) {
+            @AuthenticationPrincipal String userEmail) {
 
-        AnalysisResponse response = analysisService.getById(id, userDetails.getUsername());
+        AnalysisResponse response = analysisService.getById(id, userEmail);
         return ResponseEntity.ok(response);
     }
 
@@ -79,10 +78,10 @@ public class AnalysisController {
     )
     @GetMapping("/history")
     public ResponseEntity<Page<AnalysisResponse>> getHistory(
-            @AuthenticationPrincipal UserDetails userDetails,
+            @AuthenticationPrincipal String userEmail,
             @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
 
-        Page<AnalysisResponse> response = analysisService.getHistory(userDetails.getUsername(), pageable);
+        Page<AnalysisResponse> response = analysisService.getHistory(userEmail, pageable);
         return ResponseEntity.ok(response);
     }
 }
