@@ -30,3 +30,8 @@ logging:
 cors:
   allowed-origins:
     - ${CORS_ALLOWED_ORIGINS:https://witty-meadow-0da24670f.7.azurestaticapps.net}
+
+gemini:
+  api-key: ${GEMINI_API_KEY}
+  api-url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent
+  timeout-ms: 10000

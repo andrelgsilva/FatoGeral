@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+@Profile("local")
 @Service
 public class AiIntegrationService implements AiIntegrationPort {
 
