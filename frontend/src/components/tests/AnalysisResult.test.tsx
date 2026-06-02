@@ -6,26 +6,43 @@ import type { Analysis } from '../../services/analysisService';
 const mockAnalysisBase: Analysis = {
   id: '1',
   inputText: 'texto suspeito',
-  status: 'COMPLETED',
+  inputUrl: undefined,
+  status: 'DONE',
+  verdict: 'Fake News',
+  confidence: 0.87,
+  justification: 'Texto sem fontes confiáveis.',
+  sources: [{ url: 'https://source.com' }],
   createdAt: new Date().toISOString(),
-  result: {
-    veredito: 'Fake News',
-    confianca: 0.87,
-    justificativa: 'Texto sem fontes confiáveis.',
-    fontes: ['https://source.com'],
-  },
 };
 
 describe('AnalysisResult', () => {
   it('shouldShowSpinnerWhenStatusIsPending', () => {
-    const analysis: Analysis = { ...mockAnalysisBase, status: 'PENDING', result: null };
+    const analysis: Analysis = {
+      ...mockAnalysisBase,
+      status: 'PENDING',
+      verdict: null,
+      confidence: null,
+      justification: null,
+      sources: [],
+    };
+
     render(<AnalysisResult analysis={analysis} />);
+
     expect(screen.getByText(/ia está analisando/i)).toBeInTheDocument();
   });
 
   it('shouldShowErrorStateWhenStatusIsError', () => {
-    const analysis: Analysis = { ...mockAnalysisBase, status: 'ERROR', result: null };
+    const analysis: Analysis = {
+      ...mockAnalysisBase,
+      status: 'ERROR',
+      verdict: null,
+      confidence: null,
+      justification: null,
+      sources: [],
+    };
+
     render(<AnalysisResult analysis={analysis} />);
+
     expect(screen.getByText(/erro ao processar/i)).toBeInTheDocument();
   });
 
@@ -46,7 +63,9 @@ describe('AnalysisResult', () => {
 
   it('shouldDisplaySourceLinksWhenAvailable', () => {
     render(<AnalysisResult analysis={mockAnalysisBase} />);
+
     const link = screen.getByRole('link', { name: /source\.com/i });
+
     expect(link).toBeInTheDocument();
     expect(link).toHaveAttribute('href', 'https://source.com');
   });
@@ -54,9 +73,11 @@ describe('AnalysisResult', () => {
   it('shouldNotDisplaySourcesWhenEmpty', () => {
     const analysis: Analysis = {
       ...mockAnalysisBase,
-      result: { ...mockAnalysisBase.result!, fontes: [] },
+      sources: [],
     };
+
     render(<AnalysisResult analysis={analysis} />);
+
     expect(screen.queryByText('Fontes')).not.toBeInTheDocument();
   });
 });
