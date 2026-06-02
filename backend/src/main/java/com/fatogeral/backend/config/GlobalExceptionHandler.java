@@ -76,12 +76,14 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, Object>> handleGenericError(
-            Exception ex, HttpServletRequest request) {
+        Exception ex, HttpServletRequest request) {
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error", 
-                        "Ocorreu um erro interno. Tente novamente.", request.getRequestURI()));
-    }
+    ex.printStackTrace(); // temporário para ver o erro real
+
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+        .body(buildError(HttpStatus.INTERNAL_SERVER_ERROR, "Internal Server Error",
+                "Ocorreu um erro interno. Tente novamente.", request.getRequestURI()));
+}
 
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<Map<String, Object>> handleIllegalState(
