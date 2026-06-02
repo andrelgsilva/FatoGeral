@@ -43,9 +43,10 @@ export default function History() {
   }
 
   // Pega as primeiras 80 letras do conteúdo
-  function truncate(text: string): string {
+  function truncate(text?: string | null): string {
+    if (!text) return 'Sem conteúdo informado';
     return text.length > 80 ? text.slice(0, 80) + '...' : text;
-  }
+}
 
   // Cor do veredicto
   function getBadgeColor(veredito: string): string {
@@ -93,7 +94,7 @@ export default function History() {
             >
               {/* Trecho do conteúdo */}
               <p className="text-sm text-gray-700 mb-2">
-                {truncate(analysis.inputText || analysis.inputUrl || '')}
+                {truncate(analysis.inputText || analysis.inputUrl)}
               </p>
 
               <div className="flex items-center justify-between gap-2 flex-wrap">
@@ -110,7 +111,7 @@ export default function History() {
 
                 <div className="flex items-center gap-3 text-xs text-gray-400">
                   {/* Confiança */}
-                  {analysis.status === 'DONE' && analysis.confidence !== null && (
+                  {analysis.status === 'DONE' && analysis.confidence != null && (
                     <span>{Math.round(analysis.confidence * 100)}% confiança</span>
                   )}
                   {/* Data */}
