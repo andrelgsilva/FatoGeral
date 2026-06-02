@@ -66,7 +66,7 @@ export function ReviewModal({ analysis, onClose, onSaved }: Props) {
         {/* Conteúdo analisado */}
         <div className="bg-gray-50 rounded-lg p-3 mb-4">
           <p className="text-xs text-gray-400 mb-1">Conteúdo analisado</p>
-          <p className="text-sm text-gray-700 line-clamp-3">{analysis.content}</p>
+          <p className="text-sm text-gray-700 line-clamp-3">{analysis.inputText || analysis.inputUrl || ''}</p>
         </div>
 
         <div className="flex flex-col gap-4">

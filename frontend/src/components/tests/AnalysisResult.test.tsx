@@ -5,7 +5,7 @@ import type { Analysis } from '../../services/analysisService';
 
 const mockAnalysisBase: Analysis = {
   id: '1',
-  content: 'texto suspeito',
+  inputText: 'texto suspeito',
   status: 'COMPLETED',
   createdAt: new Date().toISOString(),
   result: {

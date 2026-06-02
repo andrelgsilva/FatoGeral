@@ -153,7 +153,7 @@ export default function Admin() {
               {analyses.map((analysis) => (
                 <tr key={analysis.id} className="border-b border-gray-50 hover:bg-gray-50 transition">
                   <td className="px-4 py-3 text-gray-600">{(analysis as any).userEmail ?? '—'}</td>
-                  <td className="px-4 py-3 text-gray-700 max-w-[200px] truncate">{analysis.content}</td>
+                  <td className="px-4 py-3 text-gray-700 max-w-[200px] truncate">{analysis.inputText || analysis.inputUrl || ''}</td>
                   <td className="px-4 py-3 text-gray-600">{analysis.result?.veredito ?? '—'}</td>
                   <td className="px-4 py-3">
                     <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${

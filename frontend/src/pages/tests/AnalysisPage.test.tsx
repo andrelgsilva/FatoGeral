@@ -41,7 +41,7 @@ describe('Home Page — Formulário de análise', () => {
   it('shouldDisplayResultAfterSuccessfulAnalysis', async () => {
     (createAnalysis as any).mockResolvedValue({
       id: '1',
-      content: 'texto suspeito',
+      inputText: 'texto suspeito',
       status: 'COMPLETED',
       createdAt: new Date().toISOString(),
       result: {

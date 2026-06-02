@@ -87,7 +87,7 @@ export default function AnalysisDetail() {
       {/* Conteúdo analisado */}
       <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 mb-4">
         <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">Conteúdo analisado</p>
-        <p className="text-sm text-gray-700 break-words">{analysis.content}</p>
+        <p className="text-sm text-gray-700 break-words">{analysis.inputText || analysis.inputUrl || ''}</p>
       </div>
 
       {/* Resultado */}
