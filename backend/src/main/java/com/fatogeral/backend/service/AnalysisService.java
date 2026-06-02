@@ -46,7 +46,10 @@ public class AnalysisService {
         analysisRepository.save(analysis);
 
         try {
-            String content = request.getInputText() != null ? request.getInputText() : request.getInputUrl();
+            String content = request.getInputText() != null && !request.getInputText().isBlank()
+                    ? request.getInputText()
+                    : request.getInputUrl();
+
             var result = aiIntegrationService.analyze(content);
 
             analysis.setVerdict(result.getVerdict());
@@ -59,9 +62,14 @@ public class AnalysisService {
             return AnalysisResponse.from(analysis, result.getSources());
 
         } catch (Exception e) {
+            analysis.setVerdict("INCONCLUSIVO");
+            analysis.setConfidence(BigDecimal.valueOf(0.0));
+            analysis.setJustification("A análise automática ainda não está disponível. Tente novamente mais tarde.");
             analysis.setStatus(AnalysisStatus.ERROR);
+
             analysisRepository.save(analysis);
-            throw new RuntimeException("Erro ao processar análise com IA");
+
+            return AnalysisResponse.from(analysis, List.of());
         }
     }
 
@@ -96,4 +104,4 @@ public class AnalysisService {
     public List<TrendResponse> getTrends() {
         return analysisRepository.findTopVerdicts();
     }
-}
+}   
