@@ -36,7 +36,7 @@ export default function Trends() {
       {/* Cabeçalho público */}
       <header className="bg-white border-b border-gray-200 shadow-sm">
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center justify-between">
-          <span className="text-lg font-bold text-blue-600">FatoGeral</span>
+          <Link to="/" className="text-lg font-bold text-blue-600">FatoGeral</Link>
           <div className="flex gap-3">
             <Link to="/login" className="flex items-center text-sm text-gray-600 hover:text-blue-600 transition">
               Entrar

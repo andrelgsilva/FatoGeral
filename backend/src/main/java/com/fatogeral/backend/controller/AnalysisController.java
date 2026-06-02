@@ -79,7 +79,7 @@ public class AnalysisController {
     @GetMapping("/history")
     public ResponseEntity<Page<AnalysisResponse>> getHistory(
             @AuthenticationPrincipal String userEmail,
-            @PageableDefault(size = 10, sort = "createdAt") Pageable pageable) {
+            @PageableDefault(size = 10, sort = "createdAt" direction = org.springframework.data.domain.Sort.Direction.DESC) Pageable pageable) {
 
         Page<AnalysisResponse> response = analysisService.getHistory(userEmail, pageable);
         return ResponseEntity.ok(response);
