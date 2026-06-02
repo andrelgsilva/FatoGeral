@@ -11,6 +11,8 @@ import com.fatogeral.backend.integration.AiIntegrationPort;
 import com.fatogeral.backend.repository.AnalysisRepository;
 import com.fatogeral.backend.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -19,6 +21,8 @@ import java.util.UUID;
 
 @Service
 public class AnalysisService {
+
+    private static final Logger log = LoggerFactory.getLogger(AnalysisService.class);
 
     private final AnalysisRepository analysisRepository;
     private final UserRepository userRepository;
@@ -33,8 +37,16 @@ public class AnalysisService {
     }
 
     public AnalysisResponse createAnalysis(AnalysisRequest request, String userEmail) {
+        log.info("Iniciando criação de análise para usuário: {}", userEmail);
+        log.info("Payload recebido - inputText preenchido: {}, inputUrl preenchida: {}",
+                request.getInputText() != null && !request.getInputText().isBlank(),
+                request.getInputUrl() != null && !request.getInputUrl().isBlank());
+
         User user = userRepository.findByEmail(userEmail)
-                .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
+                .orElseThrow(() -> {
+                    log.error("Usuário não encontrado para email: {}", userEmail);
+                    return new EntityNotFoundException("Usuário não encontrado");
+                });
 
         Analysis analysis = Analysis.builder()
                 .user(user)
@@ -43,14 +55,25 @@ public class AnalysisService {
                 .status(AnalysisStatus.PENDING)
                 .build();
 
-        analysisRepository.save(analysis);
+        try {
+            analysisRepository.save(analysis);
+            log.info("Análise salva inicialmente com status PENDING. ID: {}", analysis.getId());
+        } catch (Exception e) {
+            log.error("Erro ao salvar análise inicial no banco", e);
+            throw e;
+        }
 
         try {
             String content = request.getInputText() != null && !request.getInputText().isBlank()
                     ? request.getInputText()
                     : request.getInputUrl();
 
+            log.info("Chamando integração de IA para análise ID: {}", analysis.getId());
+
             var result = aiIntegrationService.analyze(content);
+
+            log.info("Resultado da IA recebido para análise ID: {}. Verdict: {}, Confidence: {}",
+                    analysis.getId(), result.getVerdict(), result.getConfidence());
 
             analysis.setVerdict(result.getVerdict());
             analysis.setConfidence(BigDecimal.valueOf(result.getConfidence()));
@@ -59,21 +82,35 @@ public class AnalysisService {
 
             analysisRepository.save(analysis);
 
+            log.info("Análise concluída com sucesso. ID: {}", analysis.getId());
+
             return AnalysisResponse.from(analysis, result.getSources());
 
         } catch (Exception e) {
-            analysis.setVerdict("INCONCLUSIVO");
-            analysis.setConfidence(BigDecimal.valueOf(0.0));
-            analysis.setJustification("A análise automática ainda não está disponível. Tente novamente mais tarde.");
-            analysis.setStatus(AnalysisStatus.ERROR);
+            log.error("Erro ao processar análise com IA. ID: {}", analysis.getId(), e);
 
-            analysisRepository.save(analysis);
+            try {
+                analysis.setVerdict("INCONCLUSIVO");
+                analysis.setConfidence(BigDecimal.valueOf(0.0));
+                analysis.setJustification("A análise automática ainda não está disponível. Tente novamente mais tarde.");
+                analysis.setStatus(AnalysisStatus.ERROR);
 
-            return AnalysisResponse.from(analysis, List.of());
+                analysisRepository.save(analysis);
+
+                log.info("Análise marcada como ERROR após falha. ID: {}", analysis.getId());
+
+                return AnalysisResponse.from(analysis, List.of());
+
+            } catch (Exception saveError) {
+                log.error("Erro ao salvar análise com status ERROR. ID: {}", analysis.getId(), saveError);
+                throw saveError;
+            }
         }
     }
 
     public AnalysisResponse getById(UUID id, String userEmail) {
+        log.info("Buscando análise por ID: {} para usuário: {}", id, userEmail);
+
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
@@ -85,6 +122,7 @@ public class AnalysisService {
         boolean isAdmin = user.getRole() == Role.ADMIN;
 
         if (!isOwner && !isAdmin) {
+            log.warn("Acesso negado à análise {} pelo usuário {}", id, userEmail);
             throw new EntityNotFoundException("Análise não encontrada");
         }
 
@@ -92,6 +130,8 @@ public class AnalysisService {
     }
 
     public List<AnalysisResponse> getHistory(String userEmail) {
+        log.info("Buscando histórico de análises para usuário: {}", userEmail);
+
         User user = userRepository.findByEmail(userEmail)
                 .orElseThrow(() -> new EntityNotFoundException("Usuário não encontrado"));
 
@@ -102,6 +142,7 @@ public class AnalysisService {
     }
 
     public List<TrendResponse> getTrends() {
+        log.info("Buscando tendências de análises");
         return analysisRepository.findTopVerdicts();
     }
-}   
+}
