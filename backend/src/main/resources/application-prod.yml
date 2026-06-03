@@ -33,6 +33,5 @@ cors:
 
 gemini:
   api-key: ${GEMINI_API_KEY}
-  api-url: gemini:
   api-url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-lite:generateContent
   timeout-ms: 10000
