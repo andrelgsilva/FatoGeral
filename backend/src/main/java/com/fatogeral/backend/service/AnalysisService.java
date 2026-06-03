@@ -98,6 +98,8 @@ public class AnalysisService {
                 analysis.setJustification(
                     "Erro real: " + e.getClass().getSimpleName() + " - " + e.getMessage()
                 );
+
+                analysis.setStatus(AnalysisStatus.ERROR);
                 
                 analysis.setStatus(AnalysisStatus.ERROR);
 
