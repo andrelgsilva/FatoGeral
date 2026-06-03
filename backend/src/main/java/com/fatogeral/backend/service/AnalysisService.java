@@ -94,7 +94,11 @@ public class AnalysisService {
             try {
                 analysis.setVerdict("INCONCLUSIVO");
                 analysis.setConfidence(BigDecimal.valueOf(0.0));
-                analysis.setJustification("A análise automática ainda não está disponível. Tente novamente mais tarde.");
+
+                analysis.setJustification(
+                    "Erro real: " + e.getClass().getSimpleName() + " - " + e.getMessage()
+                );
+                
                 analysis.setStatus(AnalysisStatus.ERROR);
 
                 analysisRepository.save(analysis);

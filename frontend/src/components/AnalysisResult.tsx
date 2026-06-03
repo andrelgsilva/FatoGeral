@@ -29,7 +29,7 @@ export function AnalysisResult({ analysis }: Props) {
     );
   }
 
-  if (analysis.status === 'ERROR') {
+  if (analysis.status === 'ERROR' && !analysis.verdict) {
     return (
       <div className="p-4 rounded-lg bg-red-50 border border-red-200 text-sm text-red-600">
         Ocorreu um erro ao processar esta análise. Tente novamente.
